@@ -3,14 +3,14 @@ export default class WebSocketService {
       this.url = url;
       this.onMessage = onMessage;
       this.ws = null;
-      this.reconnectInterval = 5000; // Time to wait before attempting reconnection (in milliseconds)
+      this.reconnectInterval = 5000;
     }
   
     connect() {
       this.ws = new WebSocket(this.url);
   
       this.ws.onopen = () => {
-        console.log('WebSocket connection opened.');
+        console.log('WebSocket connected');
       };
   
       this.ws.onmessage = (event) => {
@@ -18,7 +18,7 @@ export default class WebSocketService {
           const data = JSON.parse(event.data);
           this.onMessage(data);
         } catch (error) {
-          console.error('Failed to parse message data:', error);
+          console.error(error);
         }
       };
   
@@ -26,9 +26,9 @@ export default class WebSocketService {
         console.error('WebSocket error:', error);
       };
   
+      // TODO:: heart beat ping pong
       this.ws.onclose = (event) => {
-        console.log('WebSocket connection closed:', event.reason);
-        // Optionally attempt to reconnect
+        console.log('WebSocket disconnected:', event.reason);
         setTimeout(() => this.connect(), this.reconnectInterval);
       };
     }

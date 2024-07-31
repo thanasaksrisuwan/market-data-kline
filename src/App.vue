@@ -45,7 +45,6 @@ export default {
     //   chartData.value = transformedData;
     // };
 
-    // TODO:: heart beat ping pong
     const binanceWS = new WebSocketService('wss://stream.binance.com:9443/ws/btcusdt@kline_1m', handleBinanceMessage);
     // const huobiWS = new WebSocketService('wss://api.huobi.pro/ws', handleHuobiMessage);
 
