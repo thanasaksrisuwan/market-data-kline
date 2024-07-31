@@ -1,6 +1,20 @@
-# marketdata
+# Market Data Project
 
-This template should help get you started developing with Vue 3 in Vite.
+## Overview
+
+The **Market Data** project is designed to display financial market data using real-time charts. It uses the `lightweight-charts` library to create interactive candlestick charts and manages WebSocket connections to fetch and display data.
+
+## Features
+
+- **Real-time Data Visualization**: Displays market data using candlestick charts.
+- **WebSocket Support**: Connects to WebSocket services for real-time data updates.
+
+## Dependencies
+
+- **`lightweight-charts`**: ^4.2.0 - Library for creating financial charts.
+- **`vue`**: ^3.4.29 - Vue 3 framework.
+- **`vue-router`**: ^4.3.3 - Vue 3 routing library.
+- **`websocket`**: ^1.0.35 - WebSocket client library.
 
 ## Recommended IDE Setup
 
