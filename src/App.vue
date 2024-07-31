@@ -7,7 +7,7 @@
 <script>
 import { ref, onMounted, onUnmounted } from 'vue';
 import MarketChart from './components/MarketChart.vue';
-import WebSocketService from './services/fetchMarketDataService';
+import fetchMarketDataService from './services/fetchMarketDataService';
 
 export default {
   name: 'App',
@@ -21,12 +21,13 @@ export default {
       console.log("data:", data);
       if (data && data.k) {
         const transformedData = {
-          time: data.k.t / 1000,
-          open: data.k.o,
-          high: data.k.h,
-          low: data.k.l,
-          close: data.k.c
+          time: data.k.t / 1000, //time
+          open: data.k.o, // open
+          high: data.k.h, // high
+          low: data.k.l, // low
+          close: data.k.c // close
         };
+        console.log(transformedData);
         chartData.value.push(transformedData);
       } else {
         console.error(data);
@@ -45,7 +46,7 @@ export default {
     //   chartData.value = transformedData;
     // };
 
-    const binanceWS = new WebSocketService('wss://stream.binance.com:9443/ws/btcusdt@kline_1m', handleBinanceMessage);
+    const binanceWS = new fetchMarketDataService('wss://stream.binance.com:9443/ws/btcusdt@kline_1m', handleBinanceMessage);
     // const huobiWS = new WebSocketService('wss://api.huobi.pro/ws', handleHuobiMessage);
 
     onMounted(() => {

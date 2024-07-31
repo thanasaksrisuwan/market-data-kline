@@ -3,15 +3,15 @@
   </template>
   
   <script>
-  import { onMounted, ref } from 'vue';
   import { createChart } from 'lightweight-charts';
+  import { onMounted, onUnmounted, ref } from 'vue';
   
   export default {
-    name: 'MarketChart',
+    name: 'LightweightChart',
     props: {
       data: {
         type: Array,
-        default: () => []
+        required: true
       }
     },
     setup(props) {
@@ -21,21 +21,35 @@
   
       onMounted(() => {
         chart = createChart(chartContainer.value, {
-          width: chartContainer.value.clientWidth,
-          height: chartContainer.value.clientHeight
+          width: 600,
+          height: 300,
+          layout: {
+            background: { type: 'solid', color: '#ffffff' },
+            textColor: '#333',
+          },
+          grid: {
+            vertLines: { color: '#e0e0e0' },
+            horzLines: { color: '#e0e0e0' },
+          },
         });
   
         series = chart.addCandlestickSeries({
-          upColor: 'green',
-          borderUpColor: 'green',
-          wickUpColor: 'green',
-          downColor: 'red',
-          borderDownColor: 'red',
-          wickDownColor: 'red'
+          upColor: '#26a69a',
+          downColor: '#ef5350',
+          borderVisible: false,
+          wickUpColor: '#26a69a',
+          wickDownColor: '#ef5350',
         });
+        
+        series.setData([props.data]);
   
-        if (props.data.length > 0) {
-          series.setData(props.data);
+        // Optionally, you can add a time scale to the bottom of the chart
+        chart.timeScale().fitContent();
+      });
+  
+      onUnmounted(() => {
+        if (chart) {
+          chart.remove();
         }
       });
   
@@ -48,9 +62,7 @@
   
   <style scoped>
   .chart-container {
-    position: relative;
-    width: 100%;
-    height: 100%;
+    width: 600px;
+    height: 300px;
   }
   </style>
-  
