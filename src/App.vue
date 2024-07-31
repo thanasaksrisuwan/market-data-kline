@@ -16,25 +16,38 @@ export default {
   },
   setup() {
     const chartData = ref([]);
+    const dataMap = new Map();
 
     const handleBinanceMessage = (data) => {
-      console.log("data:", data);
+      console.log("get data:", data);
       if (data && data.k) {
         const transformedData = {
-          time: data.k.t / 1000, //time
-          open: data.k.o, // open
-          high: data.k.h, // high
-          low: data.k.l, // low
-          close: data.k.c // close
+          time: convertDate(data.k.t / 1000),
+          open: parseFloat(data.k.o),
+          high: parseFloat(data.k.h),
+          low: parseFloat(data.k.l),
+          close: parseFloat(data.k.c)
         };
-        console.log(transformedData);
-        chartData.value.push(transformedData);
+
+        // Group by time
+        dataMap.set(transformedData.time, transformedData);
+
+        // Convert dataMap to sorted array
+        const sortedData = Array.from(dataMap.values()).sort((a, b) => new Date(a.time) - new Date(b.time));
+        chartData.value = sortedData;
+        
       } else {
-        console.error(data);
+        console.error('Invalid data:', data);
       }
     };
 
-
+    function convertDate(timestamp) {
+      const date = new Date(timestamp * 1000);
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
     // const handleHuobiMessage = (data) => {
     //   const transformedData = data.tick.data.map(item => ({
     //     time: item[0] / 1000, 
@@ -45,7 +58,6 @@ export default {
     //   }));
     //   chartData.value = transformedData;
     // };
-
     const binanceWS = new fetchMarketDataService('wss://stream.binance.com:9443/ws/btcusdt@kline_1m', handleBinanceMessage);
     // const huobiWS = new WebSocketService('wss://api.huobi.pro/ws', handleHuobiMessage);
 
