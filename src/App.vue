@@ -1,85 +1,48 @@
-<script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
-  </header>
-
-  <RouterView />
+  <div id="app">
+    <MarketChart :data="chartData" />
+  </div>
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
-}
+<script>
+import { ref, onMounted, onUnmounted } from 'vue';
+import MarketChart from './components/MarketChart.vue';
+import WebSocketService from './services/fetchMarketDataService';
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
+export default {
+  name: 'App',
+  components: {
+    MarketChart
+  },
+  setup() {
+    const chartData = ref([]);
 
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
-}
+    const handleBinanceMessage = (data) => {
+      // Assuming data contains an array of candlestick data
+      // Modify according to the actual data structure
+      chartData.value = data.k; // Adjust based on the actual response format
+    };
 
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
+    const handleHuobiMessage = (data) => {
+      // Assuming data contains candlestick data
+      // Modify according to the actual data structure
+      chartData.value = data.tick; // Adjust based on the actual response format
+    };
 
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
+    const binanceWS = new WebSocketService('wss://stream.binance.com:9443/ws/btcusdt@kline_1m', handleBinanceMessage);
+    const huobiWS = new WebSocketService('wss://api.huobi.pro/ws', handleHuobiMessage);
 
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
+    onMounted(() => {
+      binanceWS.connect();
+      huobiWS.connect();
+    });
 
-nav a:first-of-type {
-  border: 0;
-}
+    onUnmounted(() => {
+      binanceWS.disconnect();
+      huobiWS.disconnect();
+    });
 
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
+    return { chartData };
   }
 }
-</style>
+</script>
