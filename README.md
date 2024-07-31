@@ -2,7 +2,7 @@
 
 ## Overview
 
-The **Market Data** project is a Vue 3 application designed to display financial market data using real-time charts. It uses the `lightweight-charts` library to create interactive candlestick charts and manages WebSocket connections to fetch and display data.
+The **Market Data** project is designed to display financial market data using real-time charts. It uses the `lightweight-charts` library to create interactive candlestick charts and manages WebSocket connections to fetch and display data.
 
 ## Features
 
