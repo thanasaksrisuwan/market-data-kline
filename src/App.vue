@@ -35,7 +35,6 @@ export default {
         // Convert dataMap to sorted array
         const sortedData = Array.from(dataMap.values()).sort((a, b) => new Date(a.time) - new Date(b.time));
         chartData.value = sortedData;
-        
       } else {
         console.error('Invalid data:', data);
       }

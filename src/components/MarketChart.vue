@@ -1,5 +1,4 @@
 <template>
-    <h1 class="header">btcusdt</h1>
     <div ref="chartContainer" class="chart-container"></div>
 </template>
 
@@ -66,8 +65,5 @@ export default {
 .chart-container {
     width: 600px;
     height: 300px;
-}
-.header {
-    margin: 50px;
 }
 </style>
