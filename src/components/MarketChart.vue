@@ -4,6 +4,7 @@
   
   <script>
   import { onMounted, ref } from 'vue';
+  import { createChart } from 'lightweight-charts';
   
   export default {
     name: 'MarketChart',
@@ -19,8 +20,7 @@
       let series = null;
   
       onMounted(() => {
-        // Initialize chart
-        chart = LightweightCharts.createChart(chartContainer.value, {
+        chart = createChart(chartContainer.value, {
           width: chartContainer.value.clientWidth,
           height: chartContainer.value.clientHeight
         });
@@ -34,7 +34,6 @@
           wickDownColor: 'red'
         });
   
-        // Watch for data changes and update the chart
         if (props.data.length > 0) {
           series.setData(props.data);
         }

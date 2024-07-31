@@ -18,28 +18,45 @@ export default {
     const chartData = ref([]);
 
     const handleBinanceMessage = (data) => {
-      // Assuming data contains an array of candlestick data
-      // Modify according to the actual data structure
-      chartData.value = data.k; // Adjust based on the actual response format
+      console.log("data:", data);
+      if (data && data.k) {
+        const transformedData = {
+          time: data.k.t / 1000,
+          open: data.k.o,
+          high: data.k.h,
+          low: data.k.l,
+          close: data.k.c
+        };
+        chartData.value.push(transformedData);
+      } else {
+        console.error(data);
+      }
     };
 
-    const handleHuobiMessage = (data) => {
-      // Assuming data contains candlestick data
-      // Modify according to the actual data structure
-      chartData.value = data.tick; // Adjust based on the actual response format
-    };
 
+    // const handleHuobiMessage = (data) => {
+    //   const transformedData = data.tick.data.map(item => ({
+    //     time: item[0] / 1000, 
+    //     open: item[1],
+    //     high: item[2],
+    //     low: item[3],
+    //     close: item[4]
+    //   }));
+    //   chartData.value = transformedData;
+    // };
+
+    // TODO:: heart beat ping pong
     const binanceWS = new WebSocketService('wss://stream.binance.com:9443/ws/btcusdt@kline_1m', handleBinanceMessage);
-    const huobiWS = new WebSocketService('wss://api.huobi.pro/ws', handleHuobiMessage);
+    // const huobiWS = new WebSocketService('wss://api.huobi.pro/ws', handleHuobiMessage);
 
     onMounted(() => {
       binanceWS.connect();
-      huobiWS.connect();
+      // huobiWS.connect();
     });
 
     onUnmounted(() => {
       binanceWS.disconnect();
-      huobiWS.disconnect();
+      // huobiWS.disconnect();
     });
 
     return { chartData };
